@@ -1,0 +1,51 @@
+<div class="errMsg" *ngIf="errMessage">
+  <p>{{ errMessage }}</p>
+</div>
+<mat-card>
+  <h2 style="margin-left: 5%">signup</h2>
+  <form #form="ngForm" (ngSubmit)="signup(form)" autocomplete="off">
+    <mat-form-field>
+      <input
+        matInput
+        type="email"
+        placeholder="email"
+        name="email"
+        email
+        required
+        ngModel
+        #email="ngModel"
+      />
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+      <input
+        matInput
+        placeholder="password"
+        name="password"
+        required
+        ngModel
+        #password="ngModel"
+        [type]="hide ? 'password' : 'text'"
+      />
+      <button
+        type="button"
+        mat-icon-button
+        matSuffix
+        (click)="hide = !hide"
+        [attr.aria-label]="'Hide password'"
+        [attr.aria-pressed]="hide"
+      >
+        <mat-icon>{{ hide ? "visibility_off" : "visibility" }}</mat-icon>
+      </button>
+    </mat-form-field>
+    <button
+      style="padding: 5px 0px"
+      mat-raised-button
+      type="submit"
+      color="primary"
+      [disabled]="form.invalid || isLoading"
+    >
+      <span *ngIf="!isLoading">signup</span>
+      <div class="spinner-border" *ngIf="isLoading"></div>
+    </button>
+  </form>
+</mat-card>

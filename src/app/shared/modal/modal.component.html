@@ -1,0 +1,11 @@
+<div *ngIf="open" class="box">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-xs-12 col-sm-8 col-md-4">
+        <h3>delete post</h3>
+        <button mat-button class="ok" (click)="close(true)">delete</button>
+        <button mat-button class="cancel" (click)="close(false)">cancel</button>
+      </div>
+    </div>
+  </div>
+</div>

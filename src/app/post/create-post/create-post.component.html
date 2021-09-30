@@ -1,0 +1,61 @@
+<mat-card>
+  <h2 style="margin-left: 5%">{{ postId ? "edit" : "create" }} post</h2>
+  <form [formGroup]="postForm" (ngSubmit)="onSubmit()">
+    <mat-form-field>
+      <input
+        formControlName="title"
+        matInput
+        type="title"
+        placeholder="post title"
+      />
+    </mat-form-field>
+    <mat-form-field>
+      <textarea
+        formControlName="content"
+        matInput
+        placeholder="post content"
+        cols="30"
+        rows="5"
+      ></textarea>
+    </mat-form-field>
+    <div class="file">
+      <input
+        type="file"
+        style="display: none"
+        #fileInput
+        accept="image/png, image/jpeg"
+        (change)="onPickImage($event)"
+      />
+      <button
+        mat-button
+        type="button"
+        color="accent"
+        (click)="fileInput.click()"
+      >
+        upload image
+      </button>
+      <img
+        width="100%"
+        height="250px"
+        *ngIf="imagePath"
+        [src]="imagePath"
+        alt=""
+      />
+    </div>
+
+    <button
+      mat-raised-button
+      color="primary"
+      type="submit"
+      [disabled]="postForm.invalid || postForm.untouched"
+    >
+      <span *ngIf="!isLoading">{{ postId ? "edit" : "submit" }}</span>
+      <span *ngIf="isLoading" class="spinner-border"></span>
+    </button>
+  </form>
+</mat-card>
+<div *ngIf="alerMessageSuccess" class="alert alert-success">
+  <p>
+    <strong>{{ alerMessageSuccess }}</strong>
+  </p>
+</div>
