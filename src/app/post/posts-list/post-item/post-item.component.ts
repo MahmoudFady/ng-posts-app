@@ -1,3 +1,4 @@
+import { SocketIoService } from './../../../shared/socket-io.service';
 import { ModalService } from './../../../shared/modal/modal.service';
 import { PostService } from './../../post.service';
 import { AuthService } from './../../../auth/auth.service';
@@ -22,7 +23,8 @@ export class PostItemComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private postService: PostService,
-    private modalServie: ModalService
+    private modalServie: ModalService,
+    private socketIoService: SocketIoService
   ) {}
 
   ngOnInit(): void {
@@ -35,6 +37,7 @@ export class PostItemComponent implements OnInit {
       .subscribe((okDelete) => {
         if (okDelete) {
           this.postService.deletePostById(id);
+          this.socketIoService.onDeletePost_Io(id, 'posts');
         }
         this.subscription.unsubscribe();
       });

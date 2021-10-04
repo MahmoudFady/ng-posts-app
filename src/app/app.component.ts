@@ -1,10 +1,21 @@
+import { SocketIoService } from './shared/socket-io.service';
+import { AuthService } from './auth/auth.service';
 import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.sass']
+  styleUrls: ['./app.component.sass'],
 })
 export class AppComponent {
-  title = 'ng-app-post';
+  constructor(
+    private authService: AuthService,
+    private socketIoService: SocketIoService
+  ) {}
+  ngOnInit() {
+    console.log('app reunning');
+
+    this.socketIoService.init();
+    this.authService.autoAuth();
+  }
 }

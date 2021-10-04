@@ -5,6 +5,7 @@ import { AddPostComponent } from './post/create-post/create-post.component';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { PostsListComponent } from './post/posts-list/posts-list.component';
+import { AuthGuard } from './auth/auth.guard';
 const routes: Routes = [
   {
     path: '',
@@ -17,6 +18,7 @@ const routes: Routes = [
   },
   {
     path: 'create',
+    canActivate: [AuthGuard],
     component: AddPostComponent,
   },
   {

@@ -24,11 +24,12 @@ export class SigninComponent implements OnInit {
       .getErorrMessage()
       .subscribe((err) => {
         this.errMessage = err;
+        setTimeout(() => {
+          this.errMessage = null;
+        }, 1200);
       });
   }
   signin(form: NgForm) {
-    console.log('cliked');
-
     this.isLoading = true;
     const { email, password } = form.value;
     this.authService.signin(email, password);

@@ -15,11 +15,15 @@ module.exports.signup = async (req, res, next) => {
         id: newUser._id,
         email: newUser.email,
       },
-      process.env.JWT_KEY
+      process.env.JWT_KEY,
+      {
+        expiresIn: "1h",
+      }
     );
     res.status(200).json({
       message: "signup success",
       userId: newUser._id,
+      expireDuration: 1 * 60 * 60,
       token,
     });
   }
@@ -38,11 +42,15 @@ module.exports.signin = async (req, res, next) => {
           id: userExist._id,
           email: userExist.email,
         },
-        process.env.JWT_KEY
+        process.env.JWT_KEY,
+        {
+          expiresIn: "1h",
+        }
       );
       res.status(200).json({
         message: "signin success",
         userId: userExist._id,
+        expireDuration: 1 * 60 * 60,
         token,
       });
     }
