@@ -1,12 +1,17 @@
 <app-modal></app-modal>
-<div *ngIf="posts.length !== 0">
-  <h4>{{ posts.length }} post</h4>
-
-  <app-post-item
-    *ngFor="let post of posts.reverse()"
-    [post]="post"
-  ></app-post-item>
+<div class="spinner" *ngIf="isLoading">
+  <span class="spinner-border"></span>
 </div>
-<div *ngIf="posts.length == 0">
+<div *ngIf="posts.length !== 0 && !isLoading">
+  <app-post-item *ngFor="let post of posts" [post]="post"> </app-post-item>
+</div>
+<mat-paginator
+  *ngIf="totalPosts !== 0"
+  [length]="totalPosts"
+  [pageSize]="pageSize"
+  [pageSizeOptions]="[1, 2, 3, 4, 5]"
+  (page)="onPageChanged($event)"
+></mat-paginator>
+<div *ngIf="posts.length == 0 && !isLoading">
   <h4>no post yet</h4>
 </div>

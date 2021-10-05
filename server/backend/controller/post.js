@@ -1,11 +1,21 @@
 const Post = require("../models/post");
 const fs = require("fs");
 const path = require("path");
+const post = require("../models/post");
+const { getIO, getIo } = require("../../../socket");
 module.exports.getPosts = async (req, res, next) => {
-  const posts = await Post.find();
+  const pageSize = +req.query["pageSize"];
+  const currentPage = +req.query["currentPage"];
+  const postQuery = Post.find();
+  const totalPosts = await Post.count();
+  if (pageSize && currentPage) {
+    postQuery.skip(pageSize * (currentPage - 1)).limit(pageSize);
+  }
+  const fetchedPosts = await postQuery;
   res.status(200).json({
-    message: "success get all posts",
-    posts,
+    message: "success get posts",
+    posts: fetchedPosts,
+    totalPosts,
   });
 };
 module.exports.createPost = async (decode, req, res, next) => {
@@ -19,6 +29,7 @@ module.exports.createPost = async (decode, req, res, next) => {
     content,
     imagePath,
   }).save();
+
   res.status(200).json({
     message: "post created",
     post: newPost,

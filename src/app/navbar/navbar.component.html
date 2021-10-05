@@ -1,10 +1,13 @@
 <mat-toolbar color="primary">
   <span>posts app</span>
+  <span class="spacer"></span>
   <div class="postBtn">
     <button mat-button routerLink="/posts">posts</button>
-    <button *ngIf="isAuth" mat-button routerLink="/create">create post</button>
-    <button *ngIf="!isAuth" mat-button routerLink="/signin">signin</button>
-    <button *ngIf="!isAuth" mat-button routerLink="/signup">signup</button>
+    <button *ngIf="isAuth" mat-button routerLink="/posts/create">
+      create post
+    </button>
+    <button *ngIf="!isAuth" mat-button routerLink="/auth/signin">signin</button>
+    <button *ngIf="!isAuth" mat-button routerLink="/auth/signup">signup</button>
     <button *ngIf="isAuth" mat-button (click)="logout()">logout</button>
   </div>
 </mat-toolbar>

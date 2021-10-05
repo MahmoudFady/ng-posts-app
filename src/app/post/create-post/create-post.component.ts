@@ -9,7 +9,7 @@ import { Subscription } from 'rxjs';
   templateUrl: './create-post.component.html',
   styleUrls: ['./create-post.component.sass'],
 })
-export class AddPostComponent implements OnInit {
+export class CreatePostComponent implements OnInit {
   isLoading = false;
   alerMessageSuccess: string | null = null;
   imagePath: string | null = null;

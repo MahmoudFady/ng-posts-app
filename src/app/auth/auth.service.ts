@@ -1,12 +1,13 @@
-import { Subject } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { delay } from 'rxjs/operators';
+import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { environment } from 'src/environments/environment';
+import { Subject } from 'rxjs';
+import { delay } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private readonly url = 'http://localhost:3000/user/';
+  private readonly url = environment.BACKEND_URL + 'user/';
   private isAuth$ = new Subject<boolean>();
   private isLoading$ = new Subject<boolean>();
   private errMessage$ = new Subject<string | null>();
@@ -105,7 +106,7 @@ export class AuthService {
   logout() {
     this.clearSavedAuth();
     clearTimeout(this.authTimer);
-    this.router.navigate(['/signin']);
+    this.router.navigate(['/auth/signin']);
   }
   getSavedId() {
     return localStorage.getItem('userId');

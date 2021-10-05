@@ -1,4 +1,6 @@
+import { delay } from 'rxjs/operators';
 import { SocketIoService } from './../../shared/socket-io.service';
+import { PageEvent } from '@angular/material/paginator';
 import { IPost } from './../../shared/post.model';
 import { PostService } from './../post.service';
 import { Component, OnInit } from '@angular/core';
@@ -10,7 +12,10 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./posts-list.component.sass'],
 })
 export class PostsListComponent implements OnInit {
+  isLoading = false;
   posts: IPost[] = [];
+  totalPosts = 0;
+  pageSize = 1;
   subscriptions: Subscription[] = [];
   constructor(
     private postService: PostService,
@@ -18,11 +23,18 @@ export class PostsListComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.postService.getAllPosts();
+    this.isLoading = true;
+    this.postService.getPosts(this.pageSize, 1);
     this.subscriptions[this.subscriptions.length] = this.postService
       .getUpdatedPosts()
       .subscribe((posts) => {
         this.posts = posts;
+        this.isLoading = false;
+      });
+    this.subscriptions[this.subscriptions.length] = this.postService
+      .getPostsCount()
+      .subscribe((totalPosts) => {
+        this.totalPosts = totalPosts;
       });
     this.socketIoServie.joinRoom('posts');
     this.socketIoServie.socketIO.on('onGetPost', (post: IPost) => {
@@ -34,6 +46,12 @@ export class PostsListComponent implements OnInit {
     this.socketIoServie.socketIO.on('onGetDeletedPost', (id: string) => {
       this.postService.removePostById_Client(id);
     });
+  }
+  onPageChanged(pageData: PageEvent) {
+    this.isLoading = true;
+    const { pageSize, pageIndex } = pageData;
+    this.pageSize = pageSize;
+    this.postService.getPosts(pageSize, pageIndex + 1);
   }
   ngOnDestroy(): void {
     this.socketIoServie.leaveRoom('posts');

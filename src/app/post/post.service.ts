@@ -1,4 +1,5 @@
 import { SocketIoService } from './../shared/socket-io.service';
+import { environment } from 'src/environments/environment';
 import { delay } from 'rxjs/operators';
 import { IPost } from './../shared/post.model';
 import { Injectable } from '@angular/core';
@@ -7,20 +8,27 @@ import { HttpClient } from '@angular/common/http';
 
 @Injectable({ providedIn: 'root' })
 export class PostService {
-  private readonly url = 'http://localhost:3000/post/';
+  private readonly url = environment.BACKEND_URL + 'post/';
   private posts: IPost[] = [];
   private updatedPosts = new Subject<IPost[]>();
   private alerMessageSuccess = new Subject<string>();
+  private postsCount = 0;
+  private updatedPostsCount = new Subject<number>();
   constructor(
     private http: HttpClient,
     private socketIoService: SocketIoService
   ) {}
-  getAllPosts() {
+  getPosts(pageSize: number, currentPage: number) {
+    const query = `?pageSize=${pageSize}&currentPage=${currentPage}`;
     this.http
-      .get<{ message: string; posts: IPost[] }>(this.url)
+      .get<{ message: string; posts: IPost[]; totalPosts: number }>(
+        this.url + query
+      )
       .subscribe((response) => {
         this.posts = response.posts;
         this.updatedPosts.next(this.posts);
+        this.postsCount = response.totalPosts;
+        this.updatedPostsCount.next(this.postsCount);
       });
   }
   updatePostById_Cleint(updatedPost: IPost) {
@@ -33,14 +41,18 @@ export class PostService {
     const index = this.posts.findIndex((post) => post._id == id);
     this.posts.splice(index, 1);
     this.updatedPosts.next(this.posts);
+    this.postsCount -= 1;
+    this.updatedPostsCount.next(this.postsCount);
   }
   createPost_Client(post: IPost) {
     this.posts.push(post);
     this.updatedPosts.next(this.posts);
+    this.postsCount += 1;
+    this.updatedPostsCount.next(this.postsCount);
   }
   deletePostById(id: string) {
     this.http.delete(this.url + id).subscribe((message) => {
-      console.log(message);
+      this.getPosts(1, 2);
       this.removePostById_Client(id);
     });
   }
@@ -81,5 +93,8 @@ export class PostService {
   }
   getSuccessMessage() {
     return this.alerMessageSuccess.asObservable();
+  }
+  getPostsCount() {
+    return this.updatedPostsCount.asObservable();
   }
 }
