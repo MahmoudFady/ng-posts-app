@@ -19,13 +19,14 @@ export class SignupComponent implements OnInit {
       .isLoading()
       .subscribe((loading) => {
         this.isLoading = loading;
-        console.log(this.isLoading);
       });
     this.subscriptions[this.subscriptions.length] = this.authService
       .getErorrMessage()
       .subscribe((err) => {
         this.errMessage = err;
-        console.log(this.errMessage);
+        setTimeout(() => {
+          this.errMessage = null;
+        }, 1200);
       });
   }
   signup(form: NgForm) {

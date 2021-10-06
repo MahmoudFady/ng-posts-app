@@ -1,7 +1,7 @@
 import { PostService } from './../post.service';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Params } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -12,6 +12,7 @@ import { Subscription } from 'rxjs';
 export class CreatePostComponent implements OnInit {
   isLoading = false;
   alerMessageSuccess: string | null = null;
+  alertErrorMessage: string | null = null;
   imagePath: string | null = null;
   postId: string | null = null;
   private subscriptions: Subscription[] = [];
@@ -21,6 +22,7 @@ export class CreatePostComponent implements OnInit {
     image: new FormControl(null),
   });
   constructor(
+    private router: Router,
     private route: ActivatedRoute,
     private postService: PostService
   ) {}
@@ -37,6 +39,15 @@ export class CreatePostComponent implements OnInit {
         this.isLoading = false;
         setTimeout(() => {
           this.alerMessageSuccess = null;
+        }, 1200);
+      });
+    this.subscriptions[this.subscriptions.length] = this.postService
+      .getAlertErrorMessage()
+      .subscribe((msg) => {
+        this.alertErrorMessage = msg;
+        this.isLoading = false;
+        setTimeout(() => {
+          this.alertErrorMessage = null;
         }, 1200);
       });
     if (this.postId) {
@@ -75,8 +86,9 @@ export class CreatePostComponent implements OnInit {
       this.postService.editPostById(this.postId, title, content, image);
     } else {
       this.postService.createPost(title, content, image);
+      this.postForm.reset();
+      this.imagePath = null;
     }
-    this.imagePath = null;
   }
   ngOnDestroy(): void {
     for (let subscription of this.subscriptions) {

@@ -12,6 +12,7 @@ export class PostService {
   private posts: IPost[] = [];
   private updatedPosts = new Subject<IPost[]>();
   private alerMessageSuccess = new Subject<string>();
+  private alertErrorMessage = new Subject<string>();
   private postsCount = 0;
   private updatedPostsCount = new Subject<number>();
   constructor(
@@ -72,26 +73,39 @@ export class PostService {
     this.http
       .post<{ message: string; post: IPost }>(this.url, formData)
       .pipe(delay(1000))
-      .subscribe((resualt) => {
-        this.alerMessageSuccess.next(resualt.message);
-        this.socketIoService.onCreatePost_Io(resualt.post, 'posts');
-      });
+      .subscribe(
+        (resualt) => {
+          this.alerMessageSuccess.next(resualt.message);
+          this.socketIoService.onCreatePost_Io(resualt.post, 'posts');
+        },
+        (err) => {
+          this.alertErrorMessage.next("cant't create post now");
+        }
+      );
   }
   editPostById(id: string, title: string, content: string, image: File) {
     const formData = this.getPostedData(title, content, image);
     this.http
       .put<{ message: string; post: IPost }>(this.url + id, formData)
       .pipe(delay(1000))
-      .subscribe((resualt) => {
-        this.alerMessageSuccess.next(resualt.message);
-        this.socketIoService.onUpdatePost_Io(resualt.post, 'posts');
-      });
+      .subscribe(
+        (resualt) => {
+          this.alerMessageSuccess.next(resualt.message);
+          this.socketIoService.onUpdatePost_Io(resualt.post, 'posts');
+        },
+        (err) => {
+          this.alertErrorMessage.next("cant't edit post now");
+        }
+      );
   }
   getUpdatedPosts() {
     return this.updatedPosts.asObservable();
   }
   getSuccessMessage() {
     return this.alerMessageSuccess.asObservable();
+  }
+  getAlertErrorMessage() {
+    return this.alertErrorMessage.asObservable();
   }
   getPostsCount() {
     return this.updatedPostsCount.asObservable();

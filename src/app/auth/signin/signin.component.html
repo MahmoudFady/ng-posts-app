@@ -1,5 +1,8 @@
+<div class="errMsg" *ngIf="errMessage">
+  <p>{{ errMessage }}</p>
+</div>
 <mat-card>
-  <h2 style="margin-left: 5%">signin</h2>
+  <h2>signin</h2>
   <form #form="ngForm" (ngSubmit)="signin(form)" autocomplete="off">
     <mat-form-field>
       <input
@@ -35,7 +38,6 @@
       </button>
     </mat-form-field>
     <button
-      style="padding: 5px 0px"
       mat-raised-button
       type="submit"
       color="primary"
@@ -46,6 +48,3 @@
     </button>
   </form>
 </mat-card>
-<div class="errMsg" *ngIf="errMessage">
-  <p>{{ errMessage }}</p>
-</div>

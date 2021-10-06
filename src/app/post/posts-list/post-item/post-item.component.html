@@ -1,12 +1,7 @@
 <mat-card>
   <h2>{{ post.title }}</h2>
   <p>{{ post.content }}</p>
-  <img
-    style="margin: 15px auto; width: 100%; height: 250px; border-radius: 3px"
-    *ngIf="post.imagePath"
-    [src]="post.imagePath"
-    alt=""
-  />
+  <img *ngIf="post.imagePath" [src]="post.imagePath" alt="" />
   <div *ngIf="post.creator === userId" class="ctrlBtn">
     <button mat-raised-button [routerLink]="['/posts', 'edit', post._id]">
       edit

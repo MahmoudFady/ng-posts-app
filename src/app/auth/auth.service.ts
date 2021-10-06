@@ -106,7 +106,7 @@ export class AuthService {
   logout() {
     this.clearSavedAuth();
     clearTimeout(this.authTimer);
-    this.router.navigate(['/auth/signin']);
+    this.router.navigate(['/posts']);
   }
   getSavedId() {
     return localStorage.getItem('userId');

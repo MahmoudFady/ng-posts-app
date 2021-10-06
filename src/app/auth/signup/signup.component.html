@@ -2,7 +2,7 @@
   <p>{{ errMessage }}</p>
 </div>
 <mat-card>
-  <h2 style="margin-left: 5%">signup</h2>
+  <h2>signup</h2>
   <form #form="ngForm" (ngSubmit)="signup(form)" autocomplete="off">
     <mat-form-field>
       <input
@@ -38,7 +38,6 @@
       </button>
     </mat-form-field>
     <button
-      style="padding: 5px 0px"
       mat-raised-button
       type="submit"
       color="primary"

@@ -1,4 +1,7 @@
 <app-modal></app-modal>
+<div *ngIf="!isAuth" class="alert alert-primary">
+  <p><strong>signin to create your posts</strong></p>
+</div>
 <div class="spinner" *ngIf="isLoading">
   <span class="spinner-border"></span>
 </div>

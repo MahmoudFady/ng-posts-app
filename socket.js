@@ -4,6 +4,7 @@ const init = (httpServer) => {
   io.on("connection", (socket) => {
     socket.on("join", (room) => {
       socket.join("posts");
+      console.log("new user join...");
     });
     socket.on("onCreatePost", ({ post, room }) => {
       socket.broadcast.to(room).emit("onGetPost", post);
@@ -16,6 +17,7 @@ const init = (httpServer) => {
     });
     socket.on("leave", (room) => {
       socket.leave(room);
+      console.log("user leave posts room");
     });
     socket.on("disconnect", (socket) => {
       console.log("user has been left !!");
