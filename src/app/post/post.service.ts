@@ -52,7 +52,6 @@ export class PostService {
   }
   deletePostById(id: string) {
     this.http.delete(this.url + id).subscribe((message) => {
-      this.getPosts(1, 2);
       this.removePostById_Client(id);
     });
   }

@@ -20,13 +20,9 @@ export class SocketIoService {
   }
 
   leaveRoom(room: string) {
-    console.log('leave');
-
     this.socket.emit('leave', room);
   }
   joinRoom(room: string) {
-    console.log('join');
-
     this.socket.emit('join', room);
   }
   get socketIO() {

@@ -1,3 +1,4 @@
+import { ActivatedRoute } from '@angular/router';
 import { SocketIoService } from './../../../shared/socket-io.service';
 import { ModalService } from './../../../shared/modal/modal.service';
 import { PostService } from './../../post.service';
@@ -13,6 +14,8 @@ import { Subscription } from 'rxjs';
 })
 export class PostItemComponent implements OnInit {
   userId = '';
+  pageSize = 1;
+  pageIndex = 1;
   subscription: Subscription = new Subscription();
   @Input() post: IPost = {
     _id: '',
@@ -21,6 +24,7 @@ export class PostItemComponent implements OnInit {
     creator: '',
   };
   constructor(
+    private route: ActivatedRoute,
     private authService: AuthService,
     private postService: PostService,
     private modalServie: ModalService,
@@ -29,6 +33,10 @@ export class PostItemComponent implements OnInit {
 
   ngOnInit(): void {
     this.userId = this.authService.getSavedId()!;
+    this.route.queryParams.subscribe((query) => {
+      this.pageSize = query['pageSize'];
+      this.pageIndex = query['pageIndex'];
+    });
   }
   onDeletePost(id: string) {
     this.modalServie.open();
@@ -38,6 +46,7 @@ export class PostItemComponent implements OnInit {
         if (okDelete) {
           this.postService.deletePostById(id);
           this.socketIoService.onDeletePost_Io(id, 'posts');
+          this.postService.getPosts(this.pageSize, this.pageIndex);
         }
         this.subscription.unsubscribe();
       });

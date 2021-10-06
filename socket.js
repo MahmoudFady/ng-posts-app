@@ -2,7 +2,6 @@ let io;
 const init = (httpServer) => {
   io = require("socket.io")(httpServer, { cors: "http:localhost:4200" });
   io.on("connection", (socket) => {
-    console.log("new user connection !!");
     socket.on("join", (room) => {
       socket.join("posts");
     });

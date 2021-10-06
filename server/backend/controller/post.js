@@ -1,8 +1,6 @@
 const Post = require("../models/post");
 const fs = require("fs");
 const path = require("path");
-const post = require("../models/post");
-const { getIO, getIo } = require("../../../socket");
 module.exports.getPosts = async (req, res, next) => {
   const pageSize = +req.query["pageSize"];
   const currentPage = +req.query["currentPage"];

@@ -1,3 +1,4 @@
+import { ActivatedRoute, Router } from '@angular/router';
 import { delay } from 'rxjs/operators';
 import { SocketIoService } from './../../shared/socket-io.service';
 import { PageEvent } from '@angular/material/paginator';
@@ -18,6 +19,8 @@ export class PostsListComponent implements OnInit {
   pageSize = 1;
   subscriptions: Subscription[] = [];
   constructor(
+    private route: ActivatedRoute,
+    private router: Router,
     private postService: PostService,
     private socketIoServie: SocketIoService
   ) {}
@@ -25,6 +28,10 @@ export class PostsListComponent implements OnInit {
   ngOnInit(): void {
     this.isLoading = true;
     this.postService.getPosts(this.pageSize, 1);
+    this.router.navigate([], {
+      queryParams: { pageIndex: 1, pageSize: this.pageSize },
+      relativeTo: this.route,
+    });
     this.subscriptions[this.subscriptions.length] = this.postService
       .getUpdatedPosts()
       .subscribe((posts) => {
@@ -52,6 +59,10 @@ export class PostsListComponent implements OnInit {
     const { pageSize, pageIndex } = pageData;
     this.pageSize = pageSize;
     this.postService.getPosts(pageSize, pageIndex + 1);
+    this.router.navigate([], {
+      queryParams: { pageIndex: pageIndex + 1, pageSize },
+      relativeTo: this.route,
+    });
   }
   ngOnDestroy(): void {
     this.socketIoServie.leaveRoom('posts');

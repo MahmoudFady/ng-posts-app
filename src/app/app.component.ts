@@ -13,8 +13,6 @@ export class AppComponent {
     private socketIoService: SocketIoService
   ) {}
   ngOnInit() {
-    console.log('app reunning');
-
     this.socketIoService.init();
     this.authService.autoAuth();
   }
