@@ -4,7 +4,6 @@ const init = (httpServer) => {
   io.on("connection", (socket) => {
     socket.on("join", (room) => {
       socket.join("posts");
-      console.log("new user join...");
     });
     socket.on("onCreatePost", ({ post, room }) => {
       socket.broadcast.to(room).emit("onGetPost", post);

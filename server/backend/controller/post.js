@@ -1,6 +1,10 @@
 const Post = require("../models/post");
 const fs = require("fs");
 const path = require("path");
+const deleteFile = (filePath) => {
+  const [filename] = filePath.split("/").slice(-1);
+  fs.unlinkSync(path.join(__dirname, "../../uploads", filename));
+};
 module.exports.getPosts = async (req, res, next) => {
   const pageSize = +req.query["pageSize"];
   const currentPage = +req.query["currentPage"];
@@ -27,17 +31,22 @@ module.exports.createPost = async (decode, req, res, next) => {
     content,
     imagePath,
   }).save();
-
+  if (!newPost) {
+    return res.status(404).json({
+      message: "something go wrong",
+      post: null,
+    });
+  }
   res.status(200).json({
     message: "post created",
     post: newPost,
   });
 };
 module.exports.getPostById = async (req, res, next) => {
-  const postId = req.params["id"];
-  const post = await Post.findById(postId);
+  const { id } = req.params;
+  const post = await Post.findById(id);
   if (post) {
-    res.status(200).json({
+    return res.status(200).json({
       message: "success get post",
       post,
     });
@@ -53,8 +62,7 @@ module.exports.editPost = async (decode, req, res, next) => {
   const oldPost = await Post.findById(postId);
   const imagePath = req.file ? url + req.file.filename : oldPost.imagePath;
   if (req.file && oldPost.imagePath) {
-    const image = oldPost.imagePath.split("/").slice(-1);
-    fs.unlinkSync(path.join(__dirname, "../../uploads", ...image));
+    deleteFile(oldPost.imagePath);
   }
   const newPost = await Post.findByIdAndUpdate(
     postId,
@@ -77,19 +85,17 @@ module.exports.editPost = async (decode, req, res, next) => {
 module.exports.deletePost = async (decode, req, res, next) => {
   const postId = req.params["id"];
   const deletedPost = await Post.findByIdAndDelete(postId);
-  const image = deletedPost.imagePath
-    ? deletedPost.imagePath.split("/").slice(-1)
-    : null;
-  if (deletedPost) {
-    if (image) {
-      fs.unlinkSync(path.join(__dirname, "../../uploads", ...image));
-    }
-    res.status(200).json({
-      message: "post deleted",
-      post: deletedPost,
+  const imagePath = deletedPost.imagePath ? deletedPost.imagePath : null;
+  if (!deletedPost) {
+    return res.status(401).json({
+      message: "faild to delete post",
     });
   }
-  res.status(401).json({
-    message: "faild to delete post",
+  if (imagePath) {
+    deleteFile(imagePath);
+  }
+  res.status(200).json({
+    message: "post deleted",
+    post: deletedPost,
   });
 };

@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const upload = require("../helpers/upload,");
+const upload = require("../helpers/upload");
 const checkAuth = require("../helpers/check-auth");
 const {
   getPosts,

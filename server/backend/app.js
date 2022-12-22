@@ -8,6 +8,7 @@ const postRoutes = require("./router/post");
 app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+// enable cors
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader(
@@ -28,13 +29,13 @@ mongoose
   .catch(() => {
     console.log("faild to connect db");
   });
-
+// to enable front end display the uploaded images
 app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 app.use("/user/", userRoutes);
 app.use("/post/", postRoutes);
 app.use((req, res, next) => {
   res.status(404).json({
-    message: "un knowm request",
+    message: "un knowm request , try another link",
   });
 });
 

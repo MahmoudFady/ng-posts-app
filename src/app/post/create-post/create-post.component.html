@@ -1,13 +1,3 @@
-<div *ngIf="alerMessageSuccess" class="alert alert-success">
-  <p>
-    <strong>{{ alerMessageSuccess }}</strong>
-  </p>
-</div>
-<div *ngIf="alertErrorMessage" class="alert alert-danger">
-  <p>
-    <strong>{{ alertErrorMessage }}</strong>
-  </p>
-</div>
 <mat-card>
   <h2>{{ postId ? "edit" : "create" }} post</h2>
   <form [formGroup]="postForm" (ngSubmit)="onSubmit()">
@@ -73,3 +63,13 @@
     </button>
   </form>
 </mat-card>
+<div *ngIf="alerMessageSuccess" class="alert alert-success">
+  <p>
+    <strong>{{ alerMessageSuccess }}</strong>
+  </p>
+</div>
+<div *ngIf="alertErrorMessage" class="alert alert-danger">
+  <p>
+    <strong>{{ alertErrorMessage }}</strong>
+  </p>
+</div>

@@ -1,4 +1,3 @@
-import { AngularMaterialModule } from './../angular-material.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { SharedModule } from './../shared/shared.module';
@@ -25,6 +24,7 @@ import { AuthGuard } from '../auth/auth.guard';
       },
       {
         path: 'edit/:id',
+        canActivate: [AuthGuard],
         component: CreatePostComponent,
       },
     ]),
